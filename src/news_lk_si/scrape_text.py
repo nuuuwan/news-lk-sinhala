@@ -46,12 +46,13 @@ def scrape(url):
 def text_to_audio(text_file):
     paragraphs = filex.read(text_file).split('\n\n')[:2]
     file_base = text_file[:-4]
+    tmp_base = file_base[5:]
 
     n = len(paragraphs)
     audio_files = []
     for i, paragraph in enumerate(paragraphs):
         i1 = i + 1
-        audio_file = f'{file_base}.{i1:03d}.mp3'
+        audio_file = f'/tmp/tmp_{tmp_base}.{i1:03d}.mp3'
         if os.path.exists(audio_file):
             log.warning(f'{audio_file} exists. Aborting TTS.')
         else:

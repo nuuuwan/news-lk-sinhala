@@ -19,12 +19,12 @@ def match_target_amplitude(sound, target_dBFS):
     change_in_dBFS = target_dBFS - sound.dBFS
     return sound.apply_gain(change_in_dBFS)
 
+
 def get_name_base(url):
     h = hashx.md5(url)[:N_HASH]
     date_str = url[24:34]
     date_id = date_str.replace('/', '')
     return f'news_lk_si.{NEWS_PAPER_NAME}.{date_id}.{h}'
-
 
 
 def scrape(url):
@@ -69,7 +69,8 @@ def text_to_audio(text_file):
         if os.path.exists(audio_file):
             log.warning(f'{audio_file} exists. Aborting TTS.')
         else:
-            tts = gTTS(paragraph, lang=LANG)
+            text = paragraph.replace('# ', '')
+            tts = gTTS(text, lang=LANG)
             tts.save(audio_file)
             log.info(f'Wrote {i1}/{n} to {audio_file}')
         audio_files.append(audio_file)
@@ -105,6 +106,7 @@ def process(url):
     text_file = scrape(url)
     text_to_audio(text_file)
 
+
 def is_alread_parsed(url):
     name_base = get_name_base(url)
     url_remote_audio = os.path.join(
@@ -122,7 +124,6 @@ def process_all():
             log.warning(f'{url} already processed. Aboring process')
         else:
             process(url)
-        break
 
 
 if __name__ == '__main__':

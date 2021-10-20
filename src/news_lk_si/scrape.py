@@ -137,7 +137,7 @@ def process_all():
         i1 = i + 1
         log.info(f'Processing {i1}/{n} "{url}"...')
         if is_alread_parsed(url):
-            log.warning(f'{url} already processed. Aboring process')
+            log.warning(f'{url} already processed. Aborting process')
         else:
             process(url)
 

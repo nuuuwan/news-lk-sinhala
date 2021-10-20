@@ -2,7 +2,7 @@
 
 import setuptools
 
-DIST_NAME = 'gh_template_py'
+DIST_NAME = 'news-lk-sinhala'
 version = '1.0.0'
 
 setuptools.setup(

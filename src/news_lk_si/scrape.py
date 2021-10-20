@@ -9,6 +9,7 @@ from news_lk_si._utils import log
 
 LANG = 'si'
 N_HASH = 8
+MIN_N_PARAGRAPHS = 2
 MIN_N_PARAGRAPH = 5
 NEWS_PAPER_NAME = 'dinamina'
 
@@ -19,12 +20,12 @@ def match_target_amplitude(sound, target_dBFS):
     change_in_dBFS = target_dBFS - sound.dBFS
     return sound.apply_gain(change_in_dBFS)
 
-
 def get_name_base(url):
     h = hashx.md5(url)[:N_HASH]
     date_str = url[24:34]
     date_id = date_str.replace('/', '')
     return f'news_lk_si.{NEWS_PAPER_NAME}.{date_id}.{h}'
+
 
 
 def scrape(url):
@@ -47,11 +48,14 @@ def scrape(url):
                 paragraph = p.text
                 if len(paragraph) >= MIN_N_PARAGRAPH:
                     paragraphs.append(paragraph)
-        text = '\n\n'.join(paragraphs)
 
-        filex.write(text_file, text)
-        n_text_k = len(text) / 1_000.0
-        log.info(f'Scraped "{url}" ({n_text_k:.0f}KB) to {text_file}')
+        if len(paragraphs) >= MIN_N_PARAGRAPHS:
+            text = '\n\n'.join(paragraphs)
+            filex.write(text_file, text)
+            n_text_k = len(text) / 1_000.0
+            log.info(f'Scraped "{url}" ({n_text_k:.0f}KB) to {text_file}')
+        else:
+            return None
 
     return text_file
 
@@ -112,8 +116,8 @@ def get_urls():
 
 def process(url):
     text_file = scrape(url)
-    text_to_audio(text_file)
-
+    if text_file:
+        text_to_audio(text_file)
 
 def is_alread_parsed(url):
     name_base = get_name_base(url)

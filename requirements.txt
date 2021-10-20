@@ -1,6 +1,7 @@
 # Auto Generated
 bs4
+gtts
+pydub
 pytest
-selenium
 tweepy
 utils-nuuuwan

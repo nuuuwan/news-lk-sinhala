@@ -1,6 +1,6 @@
 import unittest
 
-from news-lk-sinhala import _utils
+from news_lk_si import _utils
 
 
 class TestCase(unittest.TestCase):

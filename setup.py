@@ -2,7 +2,7 @@
 
 import setuptools
 
-DIST_NAME = 'news-lk-sinhala'
+DIST_NAME = 'news_lk_si'
 version = '1.0.0'
 
 setuptools.setup(
@@ -27,8 +27,9 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'bs4',
+        'gtts',
+        'pydub',
         'pytest',
-        'selenium',
         'tweepy',
         'utils-nuuuwan',
     ],

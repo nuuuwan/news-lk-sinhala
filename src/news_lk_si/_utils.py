@@ -3,4 +3,4 @@
 import logging
 
 logging.basicConfig(level=logging.INFO)
-log = logging.getLogger('news-lk-sinhala')
+log = logging.getLogger('news_lk_si')

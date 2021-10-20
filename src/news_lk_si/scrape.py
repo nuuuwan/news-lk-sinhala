@@ -44,13 +44,15 @@ def scrape(url):
 
 
 def text_to_audio(text_file):
-    paragraphs = filex.read(text_file).split('\n\n')[:2]
+    paragraphs = filex.read(text_file).split('\n\n')
     file_base = text_file[:-4]
     tmp_base = file_base[5:]
 
     n = len(paragraphs)
     audio_files = []
     for i, paragraph in enumerate(paragraphs):
+        if len(paragraph) == 0:
+            continue
         i1 = i + 1
         audio_file = f'/tmp/tmp_{tmp_base}.{i1:03d}.mp3'
         if os.path.exists(audio_file):
@@ -96,6 +98,7 @@ def process(url):
 def process_all():
     for url in get_urls():
         process(url)
+        break
 
 
 if __name__ == '__main__':

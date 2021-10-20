@@ -70,9 +70,12 @@ def text_to_audio(text_file):
             log.warning(f'{audio_file} exists. Aborting TTS.')
         else:
             text = paragraph.replace('# ', '')
-            tts = gTTS(text, lang=LANG)
-            tts.save(audio_file)
-            log.info(f'Wrote {i1}/{n} to {audio_file}')
+            try:
+                tts = gTTS(text, lang=LANG)
+                tts.save(audio_file)
+                log.info(f'Wrote {i1}/{n} to {audio_file}')
+            except:
+                continue
         audio_files.append(audio_file)
 
     combined_audio = None
@@ -118,8 +121,11 @@ def is_alread_parsed(url):
 
 
 def process_all():
-
-    for url in get_urls():
+    urls = get_urls()
+    n = len(urls)
+    for i, url in enumerate(urls):
+        i1 = i + 1
+        log.info(f'{i1}/{n} Processing "{url}"...')
         if is_alread_parsed(url):
             log.warning(f'{url} already processed. Aboring process')
         else:

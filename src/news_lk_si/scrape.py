@@ -9,6 +9,7 @@ from news_lk_si._utils import log
 
 LANG = 'si'
 N_HASH = 8
+MIN_N_PARAGRAPH = 5
 
 
 def match_target_amplitude(sound, target_dBFS):
@@ -33,7 +34,9 @@ def scrape(url):
 
         for div in soup.find_all('div', class_='field-item even'):
             for p in div.find_all('p'):
-                paragraphs.append(p.text)
+                paragraph = p.text
+                if len(paragraph) >= MIN_N_PARAGRAPH:
+                    paragraphs.append(paragraph)
         text = '\n\n'.join(paragraphs)
 
         filex.write(text_file, text)
@@ -51,8 +54,6 @@ def text_to_audio(text_file):
     n = len(paragraphs)
     audio_files = []
     for i, paragraph in enumerate(paragraphs):
-        if len(paragraph) == 0:
-            continue
         i1 = i + 1
         audio_file = f'/tmp/tmp_{tmp_base}.{i1:03d}.mp3'
         if os.path.exists(audio_file):

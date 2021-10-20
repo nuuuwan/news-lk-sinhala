@@ -19,12 +19,12 @@ def match_target_amplitude(sound, target_dBFS):
     change_in_dBFS = target_dBFS - sound.dBFS
     return sound.apply_gain(change_in_dBFS)
 
+
 def get_name_base(url):
     h = hashx.md5(url)[:N_HASH]
     date_str = url[24:34]
     date_id = date_str.replace('/', '')
     return f'news_lk_si.{NEWS_PAPER_NAME}.{date_id}.{h}'
-
 
 
 def scrape(url):
@@ -114,12 +114,14 @@ def process(url):
     text_file = scrape(url)
     text_to_audio(text_file)
 
+
 def is_alread_parsed(url):
     name_base = get_name_base(url)
+
     url_remote_audio = os.path.join(
-        'https://github.com/nuuuwan',
-        'news_lk_si/blob/data',
-        f'{name_base}.mp3',
+        'https://raw.githubusercontent.com/nuuuwan',
+        'news_lk_si/data',
+        f'{name_base}.md',
     )
     return www.exists(url_remote_audio)
 

@@ -10,16 +10,26 @@ from news_lk_si._utils import log
 LANG = 'si'
 N_HASH = 8
 MIN_N_PARAGRAPH = 5
+NEWS_PAPER_NAME = 'dinamina'
+
+# https://github.com/nuuuwan/news_lk_si/blob/data/news_lk_si.f481e69b.mp3
 
 
 def match_target_amplitude(sound, target_dBFS):
     change_in_dBFS = target_dBFS - sound.dBFS
     return sound.apply_gain(change_in_dBFS)
 
+def get_name_base(url):
+    h = hashx.md5(url)[:N_HASH]
+    date_str = url[24:34]
+    date_id = date_str.replace('/', '')
+    return f'news_lk_si.{NEWS_PAPER_NAME}.{date_id}.{h}'
+
+
 
 def scrape(url):
-    h = hashx.md5(url)[:N_HASH]
-    text_file = f'/tmp/news_lk_si.{h}.txt'
+    name_base = get_name_base(url)
+    text_file = f'/tmp/{name_base}.md'
 
     if os.path.exists(text_file):
         log.warning(f'{text_file} exists. Aborting scrape.')
@@ -30,7 +40,7 @@ def scrape(url):
         paragraphs = []
 
         h1_title = soup.find('h1', class_='title')
-        paragraphs.append(h1_title.text)
+        paragraphs.append('# ' + h1_title.text)
 
         for div in soup.find_all('div', class_='field-item even'):
             for p in div.find_all('p'):
@@ -95,10 +105,23 @@ def process(url):
     text_file = scrape(url)
     text_to_audio(text_file)
 
+def is_alread_parsed(url):
+    name_base = get_name_base(url)
+    url_remote_audio = os.path.join(
+        'https://github.com/nuuuwan',
+        'news_lk_si/blob/data',
+        f'{name_base}.mp3',
+    )
+    return www.exists(url_remote_audio)
+
 
 def process_all():
+
     for url in get_urls():
-        process(url)
+        if is_alread_parsed(url):
+            log.warning(f'{url} already processed. Aboring process')
+        else:
+            process(url)
         break
 
 

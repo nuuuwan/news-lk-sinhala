@@ -12,18 +12,17 @@ jobs:
       matrix:
         python-version: [3.7, 3.9]
 
-    steps:
-    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8 pytest
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+        sudo apt-get update
+        sudo apt-get install ffmpeg
 
-    - uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ hashFiles('setup.py') }}-${{ hashFiles('dev-requirements.txt') }}        
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install build
 
     - name: Test
       uses: nuuuwan/python-repo-test@v1
